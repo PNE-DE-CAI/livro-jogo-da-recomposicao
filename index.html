@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Missão Proficiência · O Desafio da Recomposição</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0a2f6c 0%, #041a3a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #212121;
+        }
+
+        :root {
+            --azul-escuro: #0a2f6c;
+            --azul-claro: #eef3fb;
+            --vermelho: #d32f2f;
+            --branco: #ffffff;
+            --preto: #212121;
+            --cinza-borda: #e0e4e9;
+        }
+
+        .game-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #0f1a24;
+            border-radius: 48px;
+            padding: 20px;
+            box-shadow: 0 30px 35px rgba(0,0,0,0.5), inset 0 1px 4px rgba(255,255,200,0.1);
+            border: 1px solid #d32f2f;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0a2f6ccc;
+            backdrop-filter: blur(4px);
+            padding: 12px 24px;
+            border-radius: 60px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-area img {
+            max-height: 50px;
+            width: auto;
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .logo-area span {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffec9e;
+        }
+
+        .score-area {
+            background: #0a2f6c99;
+            padding: 5px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .score-area span {
+            color: #d32f2f;
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .timer-area {
+            background: #0a2f6c99;
+            padding: 5px 18px;
+            border-radius: 40px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .card {
+            background: var(--branco);
+            border-radius: 32px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            border: 1px solid var(--cinza-borda);
+        }
+
+        .chapter-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--azul-escuro);
+            border-left: 6px solid var(--vermelho);
+            padding-left: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .chapter-text {
+            font-size: 1.1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            color: var(--preto);
+        }
+
+        .choices {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .choice-btn {
+            background: linear-gradient(135deg, #0a2f6c, #052050);
+            border: none;
+            padding: 14px 20px;
+            border-radius: 60px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: 0.1s linear;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 0 #03102a;
+        }
+
+        .choice-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #03102a;
+        }
+
+        .choice-btn i {
+            font-size: 1.2rem;
+        }
+
+        .reset-btn {
+            background: linear-gradient(135deg, #2c3e50, #1a2a3a);
+            box-shadow: 0 4px 0 #0f1a24;
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .ranking {
+            background: #0a2f6ccc;
+            border-radius: 32px;
+            padding: 1rem;
+            margin-top: 1rem;
+            color: white;
+        }
+
+        .ranking h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            border-bottom: 1px solid #d32f2f;
+            display: inline-block;
+        }
+
+        .ranking ol {
+            margin-left: 1.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .ranking li {
+            margin: 0.3rem 0;
+        }
+
+        .start-screen {
+            text-align: center;
+        }
+
+        .start-screen input {
+            padding: 12px;
+            border-radius: 60px;
+            border: none;
+            width: 80%;
+            margin: 1rem 0;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #b4c8e0;
+            font-size: 0.8rem;
+        }
+
+        @media (max-width: 650px) {
+            .game-container {
+                padding: 12px;
+            }
+            .chapter-title {
+                font-size: 1.4rem;
+            }
+            .choice-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="game-container" id="gameContainer">
+    <div class="header">
+        <div class="logo-area">
+            <img src="https://i.ibb.co/0p01LzxB/logo3de.jpg" alt="Logo SEDUC">
+            <span>Missão Proficiência</span>
+        </div>
+        <div class="score-area" id="scoreDisplay">🏆 Pontos: <span id="totalScore">0</span></div>
+        <div class="timer-area" id="timerDisplay">⏱️ Tempo: 0s</div>
+    </div>
+
+    <div id="gameContent"></div>
+    <footer>Baseado nos documentos orientadores 2026 · Coleção SP em Ação · ZDP e Aluno Monitor</footer>
+</div>
+
+<script>
+    // Estrutura dos capítulos e escolhas
+    const chapters = [
+        {
+            id: 1,
+            title: "Capítulo 1: O Portal da Entrada",
+            text: "Você assume a turma de Orientação de Estudos (OE) de Matemática. O primeiro passo é entender onde seus alunos estão. Você acessa a plataforma Sala do Futuro para aplicar a primeira tarefa.",
+            choices: [
+                { text: "📊 Aplicar a Tarefa-SP de Entrada para mapear os conhecimentos prévios.", wisdom: 45, next: 2 },
+                { text: "📖 Iniciar diretamente a explicação do Livro 2, Missão 1 (sem diagnóstico).", wisdom: 10, next: 2 }
+            ]
+        },
+        {
+            id: 2,
+            title: "Capítulo 2: O Mapa da Diversidade",
+            text: "Os resultados chegam: a turma é heterogênea. Há estudantes nos níveis Abaixo do Básico, Básico e Proficiente. Você precisa planejar a aula considerando essa diversidade.",
+            choices: [
+                { text: "👥 Organizar a sala em grupos de 4 a 6 pessoas, mesas frente a frente (aprendizagem colaborativa).", wisdom: 50, next: 3 },
+                { text: "🪑 Manter fileiras individuais para garantir silêncio e foco total no professor.", wisdom: 15, next: 3 }
+            ]
+        },
+        {
+            id: 3,
+            title: "Capítulo 3: A Formação da Aliança",
+            text: "Para potencializar a aprendizagem, você decide utilizar a estratégia do Aluno Monitor. Você identifica estudantes proficientes que podem atuar como mediadores.",
+            choices: [
+                { text: "🤝 Formar duplas produtivas: o monitor utiliza andaimagem (scaffolding), fazendo perguntas em vez de dar respostas prontas.", wisdom: 48, next: 4 },
+                { text: "✍️ Pedir que os monitores apenas corrijam os cadernos dos colegas.", wisdom: 20, next: 4 }
+            ]
+        },
+        {
+            id: 4,
+            title: "Capítulo 4: O Enigma do Número π",
+            text: "A Missão 1 começa com o tema 'Números Decimais'. Você apresenta o número π (3,141592...) e pergunta: 'Qual a posição do algarismo 2 após o 9?'",
+            choices: [
+                { text: "✅ Milionésimo (resposta correta).", wisdom: 50, next: 5, correct: true },
+                { text: "❌ Centésimo (erro comum).", wisdom: 0, next: 5, correct: false }
+            ]
+        },
+        {
+            id: 5,
+            title: "Capítulo 5: A Mediação na ZDP",
+            text: "Estudantes do nível Abaixo do Básico estão travados na representação decimal de preços de supermercado. Você precisa agir como mediador.",
+            choices: [
+                { text: "🎯 Realizar uma Prática Orientada, acompanhando-os individualmente na resolução.", wisdom: 52, next: 6 },
+                { text: "📺 Pedir que assistam a um vídeo sobre o tema enquanto você atende os proficientes.", wisdom: 25, next: 6 }
+            ]
+        },
+        {
+            id: 6,
+            title: "Capítulo 6: A Encruzilhada da Proficiência",
+            text: "Alguns estudantes avançam muito rápido e terminam a Missão 1 antes do prazo de duas semanas. Você encara um impasse pedagógico.",
+            choices: [
+                { text: "🔍 Mantê-los na Missão 1, mas propondo Projetos de Investigação sobre a história dos números.", wisdom: 48, next: 7 },
+                { text: "🚀 Liberar o acesso antecipado à Missão 2 (Frações), utilizando murais para monitorar o progresso.", wisdom: 44, next: 7 }
+            ]
+        },
+        {
+            id: 7,
+            title: "Capítulo 7: O Laboratório Digital",
+            text: "É dia de usar a tecnologia. Você leva a turma para a sala de informática para consolidar a aprendizagem através da plataforma digital.",
+            choices: [
+                { text: "📤 Publicar as tarefas formativas apenas para quem você validou o domínio das habilidades.", wisdom: 46, next: 8 },
+                { text: "📢 Liberar todas as tarefas para todos ao mesmo tempo.", wisdom: 20, next: 8 }
+            ]
+        },
+        {
+            id: 8,
+            title: "Capítulo 8: A Linguagem entre Pares",
+            text: "Durante a atividade, um aluno do nível básico sente vergonha de admitir uma dúvida para você. O Aluno Monitor se aproxima.",
+            choices: [
+                { text: "💬 O monitor usa gírias e referências do cotidiano juvenil, reduzindo a barreira do medo.", wisdom: 55, next: 9 },
+                { text: "🔇 Você interrompe a conversa para que o monitor não 'atrapalhe' o silêncio.", wisdom: 5, next: 9 }
+            ]
+        },
+        {
+            id: 9,
+            title: "Capítulo 9: O Desafio Final - Saída",
+            text: "A Missão 1 chega ao fim. É hora da Tarefa-SP de Saída, focada na consolidação das aprendizagens desenvolvidas.",
+            choices: [
+                { text: "🔎 Analisar as evidências de aprendizagem (respostas, tarefas e intervenções orais) para decidir quem avança.", wisdom: 50, next: 10 },
+                { text: "⏩ Passar para a próxima missão independentemente dos resultados, para seguir o cronograma.", wisdom: 10, next: 10 }
+            ]
+        },
+        {
+            id: 10,
+            title: "Capítulo 10: O Mestre da Matemática",
+            text: "Após um bloco de 4 missões, você aplica a Avaliação Formativa Bimestral. O objetivo foi alcançado: os estudantes progrediram em direção à proficiência respeitando seus ritmos.",
+            choices: [] // final
+        }
+    ];
+
+    // Estado do jogo
+    let currentChapter = 0; // índice
+    let totalScore = 0;
+    let playerName = "";
+    let startTime = 0;
+    let timerInterval = null;
+    let isGameActive = false;
+
+    // Elementos
+    const gameContent = document.getElementById('gameContent');
+    const totalScoreSpan = document.getElementById('totalScore');
+    const timerDisplaySpan = document.getElementById('timerDisplay');
+
+    // Ranking (localStorage)
+    let ranking = [];
+
+    function loadRanking() {
+        const stored = localStorage.getItem('missaoProficienciaRanking');
+        if (stored) {
+            ranking = JSON.parse(stored);
+        } else {
+            ranking = [];
+        }
+        renderRanking();
+    }
+
+    function saveRanking() {
+        localStorage.setItem('missaoProficienciaRanking', JSON.stringify(ranking));
+        renderRanking();
+    }
+
+    function addScoreToRanking(name, score) {
+        ranking.push({ name, score, date: new Date().toLocaleString() });
+        ranking.sort((a, b) => b.score - a.score);
+        if (ranking.length > 10) ranking = ranking.slice(0, 10);
+        saveRanking();
+    }
+
+    function renderRanking() {
+        const existingRank = document.getElementById('rankingBox');
+        if (existingRank) existingRank.remove();
+        const rankDiv = document.createElement('div');
+        rankDiv.id = 'rankingBox';
+        rankDiv.className = 'ranking';
+        rankDiv.innerHTML = `<h3><i class="fas fa-trophy"></i> Ranking de Missões</h3><ol>`;
+        if (ranking.length === 0) {
+            rankDiv.innerHTML += `<li>Nenhuma missão completada ainda. Seja o primeiro!</li>`;
+        } else {
+            ranking.forEach((entry, idx) => {
+                rankDiv.innerHTML += `<li><strong>${idx+1}.</strong> ${entry.name} – ${entry.score} pts</li>`;
+            });
+        }
+        rankDiv.innerHTML += `</ol>`;
+        gameContent.parentNode.appendChild(rankDiv);
+    }
+
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
+
+    function startTimer() {
+        startTime = Date.now();
+        stopTimer();
+        timerInterval = setInterval(() => {
+            if (isGameActive) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                timerDisplaySpan.innerHTML = `⏱️ Tempo: ${elapsed}s`;
+            }
+        }, 200);
+    }
+
+    function calculateTimePoints(seconds) {
+        // base 50, perde 2 por segundo, mínimo 10
+        let points = 50 - (seconds * 2);
+        if (points < 10) points = 10;
+        return points;
+    }
+
+    function finishGame() {
+        isGameActive = false;
+        stopTimer();
+        timerDisplaySpan.innerHTML = `⏱️ Tempo: 0s`;
+        // adicionar ao ranking
+        addScoreToRanking(playerName, totalScore);
+        gameContent.innerHTML = `
+            <div class="card">
+                <div class="chapter-title">🏆 Missão Concluída!</div>
+                <div class="chapter-text">
+                    <p><strong>Parabéns, ${playerName}!</strong> Você completou a jornada de recomposição.</p>
+                    <p>Pontuação final: <strong style="color:#d32f2f;">${totalScore} pontos</strong>.</p>
+                    <p>Seu nome aparecerá no ranking ao lado. Use o botão abaixo para jogar novamente com outro nome.</p>
+                </div>
+                <button class="choice-btn reset-btn" id="newGameBtn"><i class="fas fa-play"></i> Nova Missão</button>
+            </div>
+        `;
+        document.getElementById('newGameBtn')?.addEventListener('click', () => {
+            resetToStart();
+        });
+        renderRanking();
+    }
+
+    function processChoice(choice, chapterIdx) {
+        if (!isGameActive) return;
+        stopTimer();
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const timePoints = calculateTimePoints(elapsed);
+        const wisdomPoints = choice.wisdom;
+        let decisionPoints = wisdomPoints + timePoints;
+        if (choice.correct !== undefined) {
+            // capricho: se for correto, bônus extra, se errado, penalidade
+            if (choice.correct) decisionPoints += 15;
+            else decisionPoints -= 15;
+        }
+        decisionPoints = Math.max(10, Math.min(100, decisionPoints));
+        totalScore += decisionPoints;
+        totalScoreSpan.innerText = totalScore;
+
+        // Mostrar feedback rápido
+        const feedback = document.createElement('div');
+        feedback.style.background = "#eef3fb";
+        feedback.style.padding = "0.5rem";
+        feedback.style.borderRadius = "40px";
+        feedback.style.marginBottom = "0.5rem";
+        feedback.style.textAlign = "center";
+        feedback.innerHTML = `⚡ +${decisionPoints} pts (${wisdomPoints} de sabedoria + ${timePoints} por rapidez)`;
+        gameContent.prepend(feedback);
+        setTimeout(() => feedback.remove(), 1500);
+
+        const nextId = choice.next;
+        if (nextId && nextId <= chapters.length) {
+            const nextIndex = nextId - 1;
+            if (nextIndex < chapters.length) {
+                loadChapter(nextIndex);
+            } else {
+                finishGame();
+            }
+        } else {
+            finishGame();
+        }
+    }
+
+    function loadChapter(index) {
+        if (!isGameActive) return;
+        const chapter = chapters[index];
+        if (!chapter) {
+            finishGame();
+            return;
+        }
+        // Renderizar
+        let choicesHtml = '';
+        if (chapter.choices.length > 0) {
+            choicesHtml = `<div class="choices">`;
+            chapter.choices.forEach((choice, idx) => {
+                choicesHtml += `<button class="choice-btn" data-choice-index="${idx}"><i class="fas fa-arrow-right"></i> ${choice.text}</button>`;
+            });
+            choicesHtml += `</div>`;
+        } else {
+            // último capítulo, sem escolha, finaliza
+            finishGame();
+            return;
+        }
+        gameContent.innerHTML = `
+            <div class="card">
+                <div class="chapter-title">${chapter.title}</div>
+                <div class="chapter-text">${chapter.text}</div>
+                ${choicesHtml}
+            </div>
+        `;
+        // Atualizar referência de botões
+        const btns = document.querySelectorAll('.choice-btn');
+        btns.forEach((btn, idx) => {
+            btn.addEventListener('click', () => {
+                if (isGameActive) {
+                    const selectedChoice = chapter.choices[idx];
+                    processChoice(selectedChoice, index);
+                }
+            });
+        });
+        startTimer();
+    }
+
+    function startGame(name) {
+        if (!name || name.trim() === "") name = "Mestre";
+        playerName = name.trim();
+        totalScore = 0;
+        totalScoreSpan.innerText = "0";
+        isGameActive = true;
+        currentChapter = 0;
+        loadChapter(0);
+    }
+
+    function resetToStart() {
+        // Remove ranking box temporariamente para recriar depois
+        const rankBox = document.getElementById('rankingBox');
+        if (rankBox) rankBox.remove();
+        gameContent.innerHTML = `
+            <div class="card start-screen">
+                <div class="chapter-title">🏁 Missão Proficiência</div>
+                <div class="chapter-text">
+                    <p>Bem-vindo(a) ao Desafio da Recomposição!</p>
+                    <p>Você será o professor-mediador de uma turma de 9º ano. Suas escolhas pedagógicas, aliadas à rapidez, determinarão sua pontuação final.</p>
+                    <p><strong>Como funciona:</strong> cada capítulo apresenta um dilema. Quanto mais rápido e alinhado às boas práticas (diagnóstico, ZDP, Aluno Monitor), mais pontos você ganha.</p>
+                    <p>Digite seu nome para começar:</p>
+                    <input type="text" id="playerNameInput" placeholder="Seu nome" maxlength="30">
+                    <button id="startGameBtn" class="choice-btn reset-btn" style="margin-top:1rem;"><i class="fas fa-flag-checkered"></i> Iniciar Jornada</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('startGameBtn')?.addEventListener('click', () => {
+            const nameInput = document.getElementById('playerNameInput');
+            const name = nameInput ? nameInput.value : "Professor(a)";
+            startGame(name);
+        });
+        isGameActive = false;
+        totalScore = 0;
+        totalScoreSpan.innerText = "0";
+        stopTimer();
+        timerDisplaySpan.innerHTML = `⏱️ Tempo: 0s`;
+        renderRanking(); // recria ranking na posição correta
+    }
+
+    // Inicialização
+    resetToStart();
+    loadRanking();
+</script>
+</body>
+</html>
